@@ -10,8 +10,21 @@ export interface User {
 }
 
 export interface AuthForm {
-  name: string;
+  login: string;
   password: string;
+  repeat_password?: string;
+}
+
+export type TError = {
+  field: keyof AuthForm | null;
+  message: string | null;
+};
+
+export interface AuthFormData {
+  login: string;
+  password: string;
+  repeat_password?: string;
+  error: TError;
 }
 
 export interface Button extends PressableProps {
@@ -31,10 +44,10 @@ export interface ButtonStyle {
 }
 
 export interface InputAuthProps {
-  value: string;
+  value: string | undefined;
   onChange: (text: string) => void;
-  label?: string; // текст метки
-  error?: string; // ошибка (если есть)
+  label?: keyof AuthForm; // текст метки
+  error?: TError;
   secureTextEntry?: boolean;
   placeholder?: string;
   style?: ViewStyle;
@@ -48,9 +61,7 @@ export enum EnumSecureStore {
   USER = "user",
 }
 
-export enum EnumAsyncStorage {}
-
 export interface Itokens {
-  access_token: string;
-  refresh_token: string;
+  access: string;
+  refresh: string;
 }

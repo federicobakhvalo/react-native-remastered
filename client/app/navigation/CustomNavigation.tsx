@@ -13,21 +13,9 @@ import AuthProvider, { AuthContext } from "../providers/AuthProvider";
 import Auth from "../components/Authentication/Auth";
 import BottomMenu from "../ui/bottom_menu/BottomMenu";
 import { SERVER_URL } from "../config/api.config";
+import { useCheckAuth } from "../providers/useCheckAuth";
 
 const Stack = createNativeStackNavigator<RootParamList>();
-
-// const customDarkTheme: Theme = {
-//   ...DarkTheme,
-//   colors: {
-//     ...DarkTheme.colors,
-//     background: "#202020",
-//     card: "#202020",
-//     text: "white",
-//     border: "#202020",
-//     primary: "white",
-//     notification: "white",
-//   },
-// };
 
 const CustomNavigation: FC = () => {
   const { user } = useContext(AuthContext);
@@ -46,6 +34,8 @@ const CustomNavigation: FC = () => {
       navRef.removeListener("state", listener);
     };
   }, []);
+
+  useCheckAuth(currentRoute);
 
   return (
     <>

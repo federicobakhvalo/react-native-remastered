@@ -34,7 +34,7 @@ const InputTextField: FC<InputAuthProps> = ({
         )}
         {/* Поле ввода */}
         <TextInput
-          style={[styles.input, error && styles.errorInput, style]} // добавляем стиль для ошибки
+          style={[styles.input, style]} // добавляем стиль для ошибки
           value={value}
           onChangeText={onChange}
           secureTextEntry={Secure}

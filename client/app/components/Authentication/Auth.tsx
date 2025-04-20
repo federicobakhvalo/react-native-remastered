@@ -1,17 +1,30 @@
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
-import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
-import Button from "../../ui/CustomButton";
+
 import CustomButton from "../../ui/CustomButton";
-import InputTextField from "../../ui/InputTextField";
+
+import AuthFields from "./AuthFields";
+import { AuthContext } from "../../providers/AuthProvider";
+import { AuthForm } from "../../types/interfaces";
+import { validateAuthForm } from "../../api/auth/auth.service";
 const Auth: FC = () => {
   const [IsReg, SetIsReg] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [repeatPassword, setRepeatPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const { AuthData, SetAuthData } = useContext(AuthContext);
+
+  const onSubmit = (data: AuthForm) => {
+    const validation = validateAuthForm(data, IsReg);
+
+    if (validation !== true) {
+      console.log(validation);
+      SetAuthData((prev) => ({
+        ...prev,
+        error: validation,
+      }));
+      return;
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,42 +45,15 @@ const Auth: FC = () => {
           <Text style={styles.HugeText}>{IsReg ? "Sign Up" : "Login"}</Text>
         </>
       </View>
-      <View style={styles.flex}>
-        <MaterialIcons name="email" size={20} color="white" />
-        <InputTextField
-          label="Email"
-          value={email}
-          onChange={setEmail}
-          error={error}
-          placeholder="Enter your email"
-        />
-      </View>
-      <View style={styles.flex}>
-        <MaterialIcons name="lock" size={20} color="white" />
-        <InputTextField
-          label="password"
-          value={password}
-          onChange={setPassword}
-          error={error}
-          secureTextEntry={true}
-          placeholder="Enter your password"
-        />
-      </View>
-      {IsReg && (
-        <View style={styles.flex}>
-          <MaterialIcons name="lock" size={20} color="white" />
-          <InputTextField
-            label="password"
-            value={repeatPassword}
-            onChange={setRepeatPassword}
-            error={error}
-            secureTextEntry={true}
-            placeholder="Repeat your password"
-          />
-        </View>
-      )}
 
-      <CustomButton classname="authorization" onPress={() => {}}>
+      <AuthFields isReg={IsReg} />
+
+      <CustomButton
+        classname="authorization"
+        onPress={() => {
+          onSubmit(AuthData);
+        }}
+      >
         {IsReg ? "Sign up" : "Login"}
       </CustomButton>
       <Pressable
