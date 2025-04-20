@@ -28,6 +28,7 @@ const AuthProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
       message: null,
       field: null,
     },
+    isLoading: false,
   });
 
   useEffect(() => {

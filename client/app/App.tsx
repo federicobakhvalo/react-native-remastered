@@ -5,6 +5,8 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import CustomNavigation from "./navigation/CustomNavigation";
 import AuthProvider from "./providers/AuthProvider";
+import axios from "axios";
+import { SERVER_URL } from "./config/api.config";
 
 export default function App() {
   return (

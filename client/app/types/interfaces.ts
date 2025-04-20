@@ -6,7 +6,7 @@ export interface User {
   avatar_url: string | null;
   password: string;
   email?: string;
-  favourites: any;
+  favourites?: any;
 }
 
 export interface AuthForm {
@@ -25,6 +25,7 @@ export interface AuthFormData {
   password: string;
   repeat_password?: string;
   error: TError;
+  isLoading: boolean;
 }
 
 export interface Button extends PressableProps {

@@ -8,21 +8,42 @@ import CustomButton from "../../ui/CustomButton";
 import AuthFields from "./AuthFields";
 import { AuthContext } from "../../providers/AuthProvider";
 import { AuthForm } from "../../types/interfaces";
-import { validateAuthForm } from "../../api/auth/auth.service";
+import { AuthService, validateAuthForm } from "../../api/auth/auth.service";
 const Auth: FC = () => {
   const [IsReg, SetIsReg] = useState<boolean>(false);
   const { AuthData, SetAuthData } = useContext(AuthContext);
 
-  const onSubmit = (data: AuthForm) => {
+  const onSubmit = async (data: AuthForm) => {
     const validation = validateAuthForm(data, IsReg);
 
     if (validation !== true) {
-      console.log(validation);
       SetAuthData((prev) => ({
         ...prev,
         error: validation,
       }));
       return;
+    }
+
+    SetAuthData((prev) => ({
+      ...prev,
+      isLoading: true,
+      error: { field: null, message: null },
+    }));
+
+    try {
+      const response = await AuthService.main(
+        IsReg,
+        data.login.trim(),
+        data.password.trim()
+      );
+      const tokens = response.data;
+      console.log(tokens);
+
+      // обработка успешного ответа, например, сохраняем токены
+      // или делаем редирект на другой экран
+    } catch (error: any) {
+      const errorData = error.response.data;
+      console.log(errorData);
     }
   };
 
@@ -50,8 +71,8 @@ const Auth: FC = () => {
 
       <CustomButton
         classname="authorization"
-        onPress={() => {
-          onSubmit(AuthData);
+        onPress={async () => {
+          await onSubmit(AuthData);
         }}
       >
         {IsReg ? "Sign up" : "Login"}

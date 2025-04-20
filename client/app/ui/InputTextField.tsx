@@ -34,13 +34,21 @@ const InputTextField: FC<InputAuthProps> = ({
         )}
         {/* Поле ввода */}
         <TextInput
-          style={[styles.input, style]} // добавляем стиль для ошибки
+          style={[
+            styles.input,
+            error?.field === label && styles.errorInput,
+            style,
+          ]} // добавляем стиль для ошибки
           value={value}
           onChangeText={onChange}
           secureTextEntry={Secure}
           placeholder={placeholder}
           placeholderTextColor={"#e8e8e8f7"}
         ></TextInput>
+
+        {error?.field === label && error?.message && (
+          <Text style={{ ...styles.errorText }}>{error.message}</Text>
+        )}
 
         {/* Отображение ошибки, если она есть */}
         {/* {error && <Text style={styles.errorText}>{error}</Text>} */}
@@ -85,6 +93,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 12,
-    marginTop: 5,
+    marginTop: 2,
+    textAlign: "center",
   },
 });

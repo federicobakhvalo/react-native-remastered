@@ -2,14 +2,24 @@ import axios from "axios";
 import { SERVER_URL } from "../../config/api.config";
 import { deleteTokensToStorage } from "./auth.helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthForm, EnumSecureStore, TError } from "../../types/interfaces";
+import {
+  AuthForm,
+  EnumSecureStore,
+  Itokens,
+  TError,
+} from "../../types/interfaces";
 
 export const AuthService = {
   async main(isReg: boolean, login: string, password: string) {
-    const response = await axios.post(
+    const data = {
+      ...(isReg ? { email: login.trim() } : { username: login.trim() }),
+      password: password,
+    };
+    const response = await axios.post<Itokens | TError>(
       `${SERVER_URL}/api/auth/${isReg ? "register/" : "token/"}`,
-      { login, password }
+      data
     );
+    return response;
   },
 
   async logout() {

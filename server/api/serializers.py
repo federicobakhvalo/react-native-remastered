@@ -1,6 +1,9 @@
+import json
 from typing import Dict, Optional
 
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
@@ -51,11 +54,7 @@ class RegisterSerializer(serializers.Serializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-
     def new_tokens(self, user: CustomUser) -> Dict:
-
-
-
         refresh_token = RefreshToken.for_user(user)
         access_token = refresh_token.access_token
 
@@ -83,19 +82,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         login = attrs.get("username")
         password = attrs.get("password")
+        print(login,password)
 
 
         # Найдем пользователя, который соответствует введенному логину (email или username)
         try:
             if '@' in login and self._validate_email(login):
                 user = CustomUser.objects.get(email__iexact=login)
-                login=user.username
+
             else:
                 user = CustomUser.objects.get(username__iexact=login)
         except CustomUser.DoesNotExist:
-            raise serializers.ValidationError("Неверное имя пользователя или пароль")
+            raise ValidationError({"login": "Неверное имя пользователя или пароль"})
 
         # Проверим пароль
         if not user.check_password(password):
-            raise serializers.ValidationError("Неверное имя пользователя или пароль")
+            raise ValidationError({"login": "Неверное имя пользователя или пароль"})
         return self.new_tokens(user=user)

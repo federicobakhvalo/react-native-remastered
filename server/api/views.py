@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -46,3 +47,9 @@ class CustomTokenRefreshView(TokenRefreshView):
 
         return Response(tokens, status=status.HTTP_200_OK)
 
+
+
+
+
+def test(request):
+    return JsonResponse({'status':'test'})

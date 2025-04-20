@@ -61,7 +61,9 @@ const CustomNavigation: FC = () => {
           )}
         </Stack.Navigator>
       </NavigationContainer>
-      <BottomMenu currentRoute={currentRoute} nav={navRef.navigate} />
+      {user && currentRoute && (
+        <BottomMenu currentRoute={currentRoute} nav={navRef.navigate} />
+      )}
     </>
   );
 };
