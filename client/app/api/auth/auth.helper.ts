@@ -1,5 +1,5 @@
 import { deleteItemAsync, getItemAsync, setItemAsync } from "expo-secure-store";
-import { EnumSecureStore, Itokens } from "../../types/interfaces";
+import { EnumSecureStore, Itokens, User } from "../../types/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthInterface } from "../../providers/auth.interface";
 import axios, { AxiosHeaders } from "axios";
@@ -44,7 +44,7 @@ export const getNewTokens = async () => {
     if (!refresh_token) return null;
 
     const response = await axios.post<Itokens>(
-      `${SERVER_URL}/api/token/refresh/`,
+      `${SERVER_URL}/api/auth/token/refresh/`,
       { refresh: refresh_token }
     );
 
@@ -58,4 +58,11 @@ export const getNewTokens = async () => {
     console.error("Ошибка при обновлении токенов", error);
     return null;
   }
+};
+
+export const saveToStorage = async (tokens: Itokens, user_data: User) => {
+  await saveTokensToStorage(tokens);
+  try {
+    await AsyncStorage.setItem(EnumSecureStore.USER, JSON.stringify(user_data));
+  } catch (e) {}
 };

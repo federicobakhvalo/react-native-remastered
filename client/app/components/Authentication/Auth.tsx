@@ -7,11 +7,16 @@ import CustomButton from "../../ui/CustomButton";
 
 import AuthFields from "./AuthFields";
 import { AuthContext } from "../../providers/AuthProvider";
-import { AuthForm } from "../../types/interfaces";
-import { AuthService, validateAuthForm } from "../../api/auth/auth.service";
+import { AuthForm, Itokens } from "../../types/interfaces";
+import {
+  AuthService,
+  decodeToken,
+  validateAuthForm,
+} from "../../api/auth/auth.service";
+import { saveToStorage } from "../../api/auth/auth.helper";
 const Auth: FC = () => {
   const [IsReg, SetIsReg] = useState<boolean>(false);
-  const { AuthData, SetAuthData } = useContext(AuthContext);
+  const { AuthData, SetAuthData, setUser } = useContext(AuthContext);
 
   const onSubmit = async (data: AuthForm) => {
     const validation = validateAuthForm(data, IsReg);
@@ -36,8 +41,13 @@ const Auth: FC = () => {
         data.login.trim(),
         data.password.trim()
       );
-      const tokens = response.data;
-      console.log(tokens);
+      const tokens = response.data as Itokens;
+      if (tokens.access) {
+        const user_data = decodeToken(tokens.access);
+
+        await saveToStorage(tokens, user_data);
+        setUser(user_data);
+      }
 
       // обработка успешного ответа, например, сохраняем токены
       // или делаем редирект на другой экран

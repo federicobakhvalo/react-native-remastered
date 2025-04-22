@@ -17,7 +17,7 @@ const MenuItem: FC<MenuProps> = ({ item, nav, currentRoute, style }) => {
     <>
       <Pressable
         onPress={() => {
-          nav(item.path);
+          nav(item.path, item.params);
         }}
         style={[styles.menuitem, style]}
       >

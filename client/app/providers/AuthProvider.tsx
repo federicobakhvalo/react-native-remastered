@@ -32,8 +32,8 @@ const AuthProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   });
 
   useEffect(() => {
-    console.log(AuthData);
-  }, [AuthData]);
+    console.log(user);
+  }, [user]);
 
   useEffect(() => {
     let mounted: boolean = true;

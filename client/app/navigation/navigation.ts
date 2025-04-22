@@ -6,7 +6,10 @@ export type RootParamList = {
   Favourites: undefined;
   Search: undefined;
   Explorer: undefined;
-  Profile: undefined;
+  Profile: {
+    id?: string;
+    isMine: boolean;
+  };
 };
 
 export interface MyRoute {

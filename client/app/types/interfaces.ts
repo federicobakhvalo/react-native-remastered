@@ -2,9 +2,9 @@ import { PressableProps, ViewStyle } from "react-native";
 
 export interface User {
   id: string;
-  name: string;
+  username: string;
   avatar_url: string | null;
-  password: string;
+  password?: string;
   email?: string;
   favourites?: any;
 }

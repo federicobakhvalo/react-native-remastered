@@ -7,7 +7,9 @@ import {
   EnumSecureStore,
   Itokens,
   TError,
+  User,
 } from "../../types/interfaces";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthService = {
   async main(isReg: boolean, login: string, password: string) {
@@ -26,6 +28,16 @@ export const AuthService = {
     await deleteTokensToStorage();
     await AsyncStorage.removeItem(EnumSecureStore.USER);
   },
+};
+
+export const decodeToken = (access: string): User => {
+  const code = jwtDecode<User>(access);
+  return {
+    id: code.id,
+    username: code.username,
+    avatar_url: code.avatar_url,
+    email: code.email,
+  };
 };
 
 export const validateAuthForm = (
